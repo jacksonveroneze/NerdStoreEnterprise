@@ -20,7 +20,7 @@ namespace NSE.Identidade.API
                             .AddEnvironmentVariables();
 
             if (hostEnvironment.IsDevelopment())
-                builder.AddUserSecrets<Startup>();
+                // builder.AddUserSecrets<Startup>();
 
             Configuration = builder.Build();
         }

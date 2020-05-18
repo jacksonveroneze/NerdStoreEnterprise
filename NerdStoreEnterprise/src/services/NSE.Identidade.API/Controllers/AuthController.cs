@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
-    [Route("[api/identidade]")]
+    [Route("[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -25,7 +25,7 @@ namespace NSE.Identidade.API.Controllers
         }
 
         [HttpPost("nova-conta")]
-        public async Task<IActionResult> Registrar(UsuarioLogin command)
+        public async Task<IActionResult> Registrar(UsuarioRegistro command)
         {
             if (ModelState.IsValid is false) return BadRequest();
 

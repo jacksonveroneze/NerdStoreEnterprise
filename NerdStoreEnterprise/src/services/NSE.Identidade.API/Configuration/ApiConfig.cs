@@ -18,7 +18,7 @@ namespace NSE.Identidade.API.Configuration
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
