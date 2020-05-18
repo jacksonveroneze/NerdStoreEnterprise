@@ -36,12 +36,12 @@ namespace NSE.Identidade.API.Controllers
                 EmailConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(identityUser, command.Senha);
+            IdentityResult result = await _userManager.CreateAsync(identityUser, command.Senha);
 
             if (result.Succeeded)
                 return Ok();
 
-            return BadRequest();
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("autenticar")]
@@ -54,7 +54,7 @@ namespace NSE.Identidade.API.Controllers
             if (result.Succeeded)
                 return Ok();
 
-            return BadRequest();
+            return BadRequest(result.Succeeded);
         }
     }
 }

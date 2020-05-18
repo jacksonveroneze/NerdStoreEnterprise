@@ -1,21 +1,19 @@
 version: "3.7"
-services
-api:
-  build:
-    context: .
-    dockerfile: Dockerfile
-  depends_on:
-    - db
-    - redis
-  link:
-    - db
-    - redis
-  ports:
-    - 8000:80
-  environment:
-    - ASPNETCORE_URLS=http://+:80
-    - DOTNET_RUNNING_IN_CONTAINER=true
-    - ASPNETCORE_ENVIRONMENT=Development
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - 8000:80
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_ENVIRONMENT=Production
         
   db:
     image: postgres
@@ -26,18 +24,6 @@ api:
       - db:/var/lib/postgresql/data
     ports:
       - 5434:5432
-
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
-
-  redis_admin:
-    image: faktiva/php-redis-admin
-    environment:
-      - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
-    ports:
-      - 4935:80
 
 volumes:
   db:
