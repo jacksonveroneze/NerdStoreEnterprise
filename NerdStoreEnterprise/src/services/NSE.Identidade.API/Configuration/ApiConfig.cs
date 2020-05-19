@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSE.Identidade.API.Services;
 
 namespace NSE.Identidade.API.Configuration
 {
@@ -9,6 +10,8 @@ namespace NSE.Identidade.API.Configuration
     {
         public static IServiceCollection AddApiConfiguration(this IServiceCollection services)
         {
+            services.AddTransient<JWTService, JWTService>();
+
             services.AddControllers();
 
             return services;
