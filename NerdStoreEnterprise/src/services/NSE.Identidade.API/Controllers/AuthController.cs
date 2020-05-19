@@ -6,29 +6,50 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NSE.Identidade.API.Extensions;
 using NSE.Identidade.API.Models;
+using NSE.Identidade.API.Models.Requests;
+using NSE.Identidade.API.Models.Responses;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class AuthController : MainController
     {
-        private readonly SignInManager<MongoUser> _signInManager;
-        private readonly UserManager<MongoUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public AuthController(SignInManager<MongoUser> signInManager, UserManager<MongoUser> userManager, IOptions<AppSettings> appSettings)
+        public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+        }
+
+        // GET api/user/userdata
+        [Authorize]
+        [HttpGet("user-data")]
+        public async Task<ActionResult> UserData()
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+
+            UserDataResponse userData = new UserDataResponse
+            {
+                Name = user.UserName,
+                LastName = user.LastName,
+                City = user.City,
+                Email = user.Email
+            };
+
+            return Ok(userData);
         }
 
         [HttpPost("nova-conta")]
@@ -36,17 +57,23 @@ namespace NSE.Identidade.API.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            MongoUser user = new MongoUser
+            ApplicationUser user = new ApplicationUser
             {
                 UserName = usuarioRegistro.Email,
                 Email = usuarioRegistro.Email,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                Name = usuarioRegistro.Name,
+                LastName = usuarioRegistro.LastName,
+                Birthdate = usuarioRegistro.Birthdate,
+                Country = usuarioRegistro.Country,
+                State = usuarioRegistro.State,
+                City = usuarioRegistro.City,
             };
 
             IdentityResult result = await _userManager.CreateAsync(user, usuarioRegistro.Senha);
 
             if (result.Succeeded)
-                return CustomResponse(await GerarJwt(usuarioRegistro.Email));
+                return CustomResponseCreated("api/v1/auth/user-data", await GerarJwt(usuarioRegistro.Email));
 
             foreach (IdentityError error in result.Errors)
                 AdicionarErroProcessamento(error.Description);
@@ -59,8 +86,7 @@ namespace NSE.Identidade.API.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            SignInResult result = await _signInManager.PasswordSignInAsync(usuarioLogin.Email, usuarioLogin.Senha,
-                false, true);
+            SignInResult result = await _signInManager.PasswordSignInAsync(usuarioLogin.Email, usuarioLogin.Senha, false, true);
 
             if (result.Succeeded)
                 return CustomResponse(await GerarJwt(usuarioLogin.Email));
@@ -68,6 +94,7 @@ namespace NSE.Identidade.API.Controllers
             if (result.IsLockedOut)
             {
                 AdicionarErroProcessamento("Usuário temporariamente bloqueado por tentativas inválidas");
+
                 return CustomResponse();
             }
 
@@ -78,7 +105,7 @@ namespace NSE.Identidade.API.Controllers
 
         private async Task<UsuarioRespostaLogin> GerarJwt(string email)
         {
-            MongoUser user = await _userManager.FindByEmailAsync(email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
             IList<Claim> claims = await _userManager.GetClaimsAsync(user);
 
             ClaimsIdentity identityClaims = await ObterClaimsUsuario(claims, user);
@@ -87,7 +114,7 @@ namespace NSE.Identidade.API.Controllers
             return ObterRespostaToken(encodedToken, user, claims);
         }
 
-        private async Task<ClaimsIdentity> ObterClaimsUsuario(ICollection<Claim> claims, MongoUser user)
+        private async Task<ClaimsIdentity> ObterClaimsUsuario(ICollection<Claim> claims, ApplicationUser user)
         {
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
 

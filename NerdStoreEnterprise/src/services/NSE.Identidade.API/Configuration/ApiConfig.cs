@@ -17,9 +17,7 @@ namespace NSE.Identidade.API.Configuration
         public static IApplicationBuilder UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
-                // app.UseDeveloperExceptionPage();
-            }
+                app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
 

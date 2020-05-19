@@ -9,6 +9,7 @@ using NSE.Identidade.API.Extensions;
 using AspNetCore.Identity.Mongo;
 using AspNetCore.Identity.Mongo.Model;
 using System;
+using NSE.Identidade.API.Models.Requests;
 
 namespace NSE.Identidade.API.Configuration
 {
@@ -16,7 +17,7 @@ namespace NSE.Identidade.API.Configuration
     {
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentityMongoDbProvider<MongoUser>(options =>
+            services.AddIdentityMongoDbProvider<ApplicationUser>(options =>
                 {
                     // Default Password settings.
                     options.Password.RequireDigit = true;
@@ -63,6 +64,7 @@ namespace NSE.Identidade.API.Configuration
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(bearerOptions =>
             {
@@ -75,7 +77,8 @@ namespace NSE.Identidade.API.Configuration
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidAudience = appSettings.ValidoEm,
-                    ValidIssuer = appSettings.Emissor
+                    ValidIssuer = appSettings.Emissor,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 

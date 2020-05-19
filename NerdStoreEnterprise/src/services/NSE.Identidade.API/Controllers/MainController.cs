@@ -21,6 +21,12 @@ namespace NSE.Identidade.API.Controllers
             }));
         }
 
+        protected ActionResult CustomResponseCreated(string url, object result = null)
+        {
+            return Created(url, result);
+        }
+
+
         protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
             IEnumerable<ModelError> erros = modelState.Values.SelectMany(e => e.Errors);
