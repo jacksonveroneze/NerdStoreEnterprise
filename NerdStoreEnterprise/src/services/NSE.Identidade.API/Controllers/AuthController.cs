@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,11 +20,11 @@ namespace NSE.Identidade.API.Controllers
     [Route("[controller]")]
     public class AuthController : MainController
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<MongoUser> _signInManager;
+        private readonly UserManager<MongoUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings)
+        public AuthController(SignInManager<MongoUser> signInManager, UserManager<MongoUser> userManager, IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -35,7 +36,7 @@ namespace NSE.Identidade.API.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            IdentityUser user = new IdentityUser
+            MongoUser user = new MongoUser
             {
                 UserName = usuarioRegistro.Email,
                 Email = usuarioRegistro.Email,
@@ -77,7 +78,7 @@ namespace NSE.Identidade.API.Controllers
 
         private async Task<UsuarioRespostaLogin> GerarJwt(string email)
         {
-            IdentityUser user = await _userManager.FindByEmailAsync(email);
+            MongoUser user = await _userManager.FindByEmailAsync(email);
             IList<Claim> claims = await _userManager.GetClaimsAsync(user);
 
             ClaimsIdentity identityClaims = await ObterClaimsUsuario(claims, user);
@@ -86,11 +87,11 @@ namespace NSE.Identidade.API.Controllers
             return ObterRespostaToken(encodedToken, user, claims);
         }
 
-        private async Task<ClaimsIdentity> ObterClaimsUsuario(ICollection<Claim> claims, IdentityUser user)
+        private async Task<ClaimsIdentity> ObterClaimsUsuario(ICollection<Claim> claims, MongoUser user)
         {
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
 
-            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
@@ -122,7 +123,7 @@ namespace NSE.Identidade.API.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        private UsuarioRespostaLogin ObterRespostaToken(string encodedToken, IdentityUser user, IEnumerable<Claim> claims)
+        private UsuarioRespostaLogin ObterRespostaToken(string encodedToken, MongoUser user, IEnumerable<Claim> claims)
         {
             return new UsuarioRespostaLogin
             {
@@ -130,7 +131,7 @@ namespace NSE.Identidade.API.Controllers
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
                 UsuarioToken = new UsuarioToken
                 {
-                    Id = user.Id,
+                    Id = user.Id.ToString(),
                     Email = user.Email,
                     Claims = claims.Select(c => new UsuarioClaim { Type = c.Type, Value = c.Value })
                 }
