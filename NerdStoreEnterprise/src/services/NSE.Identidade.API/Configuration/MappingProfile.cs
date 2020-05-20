@@ -9,7 +9,7 @@ namespace NSE.Identidade.API.Configuration
         public MappingProfile()
         {
             CreateMap<ApplicationUser, UserDataResponse>();
-            
+
             CreateMap<UsuarioRegistro, ApplicationUser>()
                 .ForMember(dest => dest.UserName, o => o.MapFrom(src => src.Email));
         }

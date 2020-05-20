@@ -18,33 +18,32 @@ namespace NSE.Identidade.API.Configuration
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentityMongoDbProvider<ApplicationUser>(options =>
-                {
-                    // Default Password settings.
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequiredUniqueChars = 2;
+            {
+                // Default Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 2;
 
-                    // Default SignIn settings.
-                    options.SignIn.RequireConfirmedEmail = false;
-                    options.SignIn.RequireConfirmedPhoneNumber = false;
-                    
-                    // Default User settings.
-                    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                    options.User.RequireUniqueEmail = true;
+                // Default SignIn settings.
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
 
-                    // Default Lockout settings.
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                    options.Lockout.MaxFailedAccessAttempts = 5;
-                    options.Lockout.AllowedForNewUsers = true;
-                },
-                mongo =>
-                {
-                    mongo.ConnectionString = configuration.GetConnectionString("MongoDbDatabase");
-                }
-            )
+                // Default User settings.
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            },
+            mongo =>
+            {
+                mongo.ConnectionString = configuration.GetConnectionString("MongoDbDatabase");
+            })
             .AddRoles<MongoRole>()
                 .AddErrorDescriber<IdentityMensagensPortugues>()
                 .AddDefaultTokenProviders(); ;

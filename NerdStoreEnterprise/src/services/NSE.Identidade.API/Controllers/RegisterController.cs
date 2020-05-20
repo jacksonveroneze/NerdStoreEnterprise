@@ -14,12 +14,12 @@ namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Route("api/v1/register")]
-    public class RegisterController : MainController
+    public class RegisterController : BaseController
     {
         private readonly ILogger<RegisterController> _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly JWTService _jwtService;
+        private readonly IJWTService _jwtService;
 
         //
         // Summary:
@@ -38,8 +38,7 @@ namespace NSE.Identidade.API.Controllers
         //   jwtService:
         //     The jwtService param.
         //
-        public RegisterController(ILogger<RegisterController> logger, IMapper mapper,
-            UserManager<ApplicationUser> userManager, JWTService jwtService)
+        public RegisterController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IJWTService jwtService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -49,7 +48,7 @@ namespace NSE.Identidade.API.Controllers
 
         //
         // Summary:
-        //     /// Method responsible for action: Register(POST). ///
+        //     /// Method responsible for action: Register (POST). ///
         //
         // Parameters:
         //   usuarioRegistro:
@@ -59,10 +58,11 @@ namespace NSE.Identidade.API.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UsuarioRespostaLogin), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Register(UsuarioRegistro usuarioRegistro)
         {
+            _logger.LogInformation("Request: [register]");
+
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             ApplicationUser user = _mapper.Map<UsuarioRegistro, ApplicationUser>(usuarioRegistro);

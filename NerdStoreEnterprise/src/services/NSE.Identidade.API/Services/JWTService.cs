@@ -15,7 +15,7 @@ using NSE.Identidade.API.Models.Responses;
 
 namespace NSE.Identidade.API.Services
 {
-    public class JWTService
+    public class JWTService : IJWTService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppSettings _appSettings;

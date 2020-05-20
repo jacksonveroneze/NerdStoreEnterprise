@@ -13,7 +13,7 @@ namespace NSE.Identidade.API.Configuration
         {
             services.AddAutoMapper(typeof(MappingProfile));
             
-            services.AddTransient<JWTService, JWTService>();
+            services.AddTransient<IJWTService, JWTService>();
 
             services.AddControllers();
 

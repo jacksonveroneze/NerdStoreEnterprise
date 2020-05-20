@@ -12,10 +12,11 @@ using NSE.Identidade.API.Models.Responses;
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/v1/user-info")]
-    public class UserInfoController : MainController
+    public class UserInfoController : BaseController
     {
-        private readonly ILogger<RegisterController> _logger;
+        private readonly ILogger<UserInfoController> _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -33,19 +34,24 @@ namespace NSE.Identidade.API.Controllers
         //   userManager:
         //     The userManager param.
         //
-        public UserInfoController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public UserInfoController(ILogger<UserInfoController> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
         }
 
-        [Authorize]
+        //
+        // Summary:
+        //     /// Method responsible for action: UserInfo (GET). ///
+        //
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UserDataResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult> UserInfo()
         {
+            _logger.LogInformation("Request: [user-info]");
+
             ApplicationUser user = await _userManager.GetUserAsync(User);
 
             UserDataResponse userInfo = _mapper.Map<ApplicationUser, UserDataResponse>(user);
