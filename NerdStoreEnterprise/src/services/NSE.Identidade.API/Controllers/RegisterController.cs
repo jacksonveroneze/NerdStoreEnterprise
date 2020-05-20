@@ -57,6 +57,7 @@ namespace NSE.Identidade.API.Controllers
         //
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UsuarioRespostaLogin), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
