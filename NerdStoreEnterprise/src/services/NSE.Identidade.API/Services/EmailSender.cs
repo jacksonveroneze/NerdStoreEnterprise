@@ -1,33 +1,24 @@
 using System.Net;
 using System.Net.Mail;
-
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using NSE.Identidade.API.Extensions;
 
 namespace NSE.Identidade.API.Services
 {
     public class EmailSender : IEmailSender
     {
-        private string host;
-        private int port;
-        private bool enableSSL;
-        private string userName;
-        private string password;
+        private readonly EmailSettings _emailSettings;
 
-        public EmailSender(string host, int port, bool enableSSL, string userName, string password)
-        {
-            this.host = host;
-            this.port = port;
-            this.enableSSL = enableSSL;
-            this.userName = userName;
-            this.password = password;
-        }
+        public EmailSender(IOptions<EmailSettings> emailSettings)
+            => _emailSettings = emailSettings.Value;
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var client = new SmtpClient(host, port)
+            SmtpClient client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
             {
-                Credentials = new NetworkCredential(userName, password),
-                EnableSsl = enableSSL
+                Credentials = new NetworkCredential(_emailSettings.UserName, _emailSettings.Password),
+                EnableSsl = _emailSettings.EnableSSL
             };
 
             return client.SendMailAsync(

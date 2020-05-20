@@ -47,14 +47,14 @@ namespace NSE.Identidade.API.Controllers
         //
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(UserDataResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserInfoResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult> UserInfo()
         {
             _logger.LogInformation("Request: [user-info]");
 
             ApplicationUser user = await _userManager.GetUserAsync(User);
 
-            UserDataResponse userInfo = _mapper.Map<ApplicationUser, UserDataResponse>(user);
+            UserInfoResponse userInfo = _mapper.Map<ApplicationUser, UserInfoResponse>(user);
 
             return Ok(userInfo);
         }

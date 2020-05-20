@@ -26,7 +26,7 @@ namespace NSE.Identidade.API.Services
             _appSettings = appSettings.Value;
         }
 
-        public async Task<UsuarioRespostaLogin> GerarJwt(string email)
+        public async Task<LoginResponse> GerarJwt(string email)
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(email);
             IList<Claim> claims = await _userManager.GetClaimsAsync(user);
@@ -73,17 +73,17 @@ namespace NSE.Identidade.API.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private UsuarioRespostaLogin ObterRespostaToken(string encodedToken, MongoUser user, IEnumerable<Claim> claims)
+        private LoginResponse ObterRespostaToken(string encodedToken, MongoUser user, IEnumerable<Claim> claims)
         {
-            return new UsuarioRespostaLogin
+            return new LoginResponse
             {
                 AccessToken = encodedToken,
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
-                UsuarioToken = new UsuarioToken
+                UsuarioToken = new UserTokenResponse
                 {
                     Id = user.Id.ToString(),
                     Email = user.Email,
-                    Claims = claims.Select(c => new UsuarioClaim { Type = c.Type, Value = c.Value })
+                    Claims = claims.Select(c => new UserClaimResponse { Type = c.Type, Value = c.Value })
                 }
             };
         }

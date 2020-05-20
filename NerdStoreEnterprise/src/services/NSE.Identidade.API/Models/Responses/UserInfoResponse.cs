@@ -2,7 +2,7 @@ using System;
 
 namespace NSE.Identidade.API.Models.Responses
 {
-    public class UserDataResponse
+    public class UserInfoResponse
     {
         public string Id { get; set; }
 

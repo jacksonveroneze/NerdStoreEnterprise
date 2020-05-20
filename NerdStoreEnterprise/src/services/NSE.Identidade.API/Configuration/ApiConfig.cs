@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSE.Identidade.API.Extensions;
 using NSE.Identidade.API.Services;
 
 namespace NSE.Identidade.API.Configuration
@@ -16,15 +17,9 @@ namespace NSE.Identidade.API.Configuration
             
             services.AddTransient<IJWTService, JWTService>();
 
-            services.AddTransient<IEmailSender, EmailSender>(i => 
-                new EmailSender(
-                    configuration["EmailSender:Host"],
-                    configuration.GetValue<int>("EmailSender:Port"),
-                    configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                    configuration["EmailSender:UserName"],
-                    configuration["EmailSender:Password"]
-                )
-            );
+            services.AddTransient<IEmailSender, EmailSender>();
+            
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
             services.AddControllers();
 

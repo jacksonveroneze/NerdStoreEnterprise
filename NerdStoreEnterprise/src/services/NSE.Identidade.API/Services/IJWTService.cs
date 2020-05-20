@@ -5,6 +5,6 @@ namespace NSE.Identidade.API.Services
 {
     public interface IJWTService
     {
-        Task<UsuarioRespostaLogin> GerarJwt(string email);
+        Task<LoginResponse> GerarJwt(string email);
     }
 }
