@@ -62,7 +62,11 @@ namespace NSE.Identidade.API.Controllers
             IdentityResult result = await _userManager.CreateAsync(user, usuarioRegistro.Senha);
 
             if (result.Succeeded)
+            {
+                var result2 = await _userManager.AddToRoleAsync(user, "Visitor2");
+
                 return CustomResponseCreated("api/v1/auth/user-data", await _jwtService.GerarJwt(usuarioRegistro.Email));
+            }
 
             foreach (IdentityError error in result.Errors)
                 AdicionarErroProcessamento(error.Description);
@@ -77,8 +81,16 @@ namespace NSE.Identidade.API.Controllers
 
             SignInResult result = await _signInManager.PasswordSignInAsync(usuarioLogin.Email, usuarioLogin.Senha, false, true);
 
+            if (result.RequiresTwoFactor)
+            {
+
+            }
+
             if (result.Succeeded)
                 return CustomResponse(await _jwtService.GerarJwt(usuarioLogin.Email));
+
+
+
 
             if (result.IsLockedOut)
             {

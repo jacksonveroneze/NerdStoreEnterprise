@@ -14,16 +14,13 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - DOTNET_RUNNING_IN_CONTAINER=true
       - ASPNETCORE_ENVIRONMENT=Production
-        
-  db:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=postgres
+
+  mongodb:
+    image: mongo:latest
     volumes:
-      - db:/var/lib/postgresql/data
+      - db:/data/db
     ports:
-      - 5434:5432
+      - 27017:27017
 
 volumes:
   db:
