@@ -64,16 +64,16 @@ namespace NSE.Identidade.API.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Login(LoginRequest usuarioLogin)
+        public async Task<ActionResult> Login(LoginRequest loginRequest)
         {
             _logger.LogInformation("Request: [auth]");
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            SignInResult result = await _signInManager.PasswordSignInAsync(usuarioLogin.Email, usuarioLogin.Senha, false, true);
+            SignInResult result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Senha, false, true);
 
             if (result.Succeeded)
-                return CustomResponse(await _jwtService.GerarJwt(usuarioLogin.Email));
+                return CustomResponse(await _jwtService.GerarJwt(loginRequest.Email));
 
             if (result.IsLockedOut)
             {

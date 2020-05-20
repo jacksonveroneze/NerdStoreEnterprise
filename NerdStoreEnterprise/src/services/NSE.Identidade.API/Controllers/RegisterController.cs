@@ -64,21 +64,21 @@ namespace NSE.Identidade.API.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register(RegisterRequest usuarioRegistro)
+        public async Task<ActionResult> Register(RegisterRequest registerRequest)
         {
             _logger.LogInformation("Request: [register]");
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            ApplicationUser user = _mapper.Map<RegisterRequest, ApplicationUser>(usuarioRegistro);
+            ApplicationUser user = _mapper.Map<RegisterRequest, ApplicationUser>(registerRequest);
 
-            IdentityResult result = await _userManager.CreateAsync(user, usuarioRegistro.Senha);
+            IdentityResult result = await _userManager.CreateAsync(user, registerRequest.Senha);
 
             if (result.Succeeded)
             {
                 await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
 
-                return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative), await _jwtService.GerarJwt(usuarioRegistro.Email));
+                return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative), await _jwtService.GerarJwt(registerRequest.Email));
             }
 
             foreach (IdentityError error in result.Errors)
