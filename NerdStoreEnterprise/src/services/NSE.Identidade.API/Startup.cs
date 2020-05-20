@@ -15,9 +15,9 @@ namespace NSE.Identidade.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityConfiguration(Configuration);
+            services.AddApiConfiguration(Configuration);
 
-            services.AddApiConfiguration();
+            services.AddIdentityConfiguration(Configuration);
 
             services.AddSwaggerConfiguration();
         }

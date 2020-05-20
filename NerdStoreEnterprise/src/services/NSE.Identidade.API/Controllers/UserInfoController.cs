@@ -13,7 +13,7 @@ namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/v1/user-info")]
+    [Route("api/v1/userinfo")]
     public class UserInfoController : BaseController
     {
         private readonly ILogger<UserInfoController> _logger;

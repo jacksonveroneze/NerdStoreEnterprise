@@ -64,7 +64,7 @@ namespace NSE.Identidade.API.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UsuarioRespostaLogin), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Login(UsuarioLogin usuarioLogin)
+        public async Task<ActionResult> Login(LoginRequest usuarioLogin)
         {
             _logger.LogInformation("Request: [auth]");
 

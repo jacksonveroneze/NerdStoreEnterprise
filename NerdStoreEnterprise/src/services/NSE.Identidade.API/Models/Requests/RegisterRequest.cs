@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NSE.Identidade.API.Models.Requests
 {
-    public class UsuarioRegistro
+    public class RegisterRequest
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [EmailAddress(ErrorMessage = "O campo {0} está em formato inválido")]

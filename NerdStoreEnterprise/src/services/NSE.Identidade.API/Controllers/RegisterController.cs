@@ -20,6 +20,7 @@ namespace NSE.Identidade.API.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJWTService _jwtService;
+        private readonly IEmailSender _emailSender;
 
         //
         // Summary:
@@ -38,12 +39,16 @@ namespace NSE.Identidade.API.Controllers
         //   jwtService:
         //     The jwtService param.
         //
-        public RegisterController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IJWTService jwtService)
+        //   emailSender:
+        //     The emailSender param.
+        //
+        public RegisterController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IJWTService jwtService, IEmailSender emailSender)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _jwtService = jwtService;
+            _emailSender = emailSender;
         }
 
         //
@@ -59,19 +64,22 @@ namespace NSE.Identidade.API.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UsuarioRespostaLogin), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register(UsuarioRegistro usuarioRegistro)
+        public async Task<ActionResult> Register(RegisterRequest usuarioRegistro)
         {
             _logger.LogInformation("Request: [register]");
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            ApplicationUser user = _mapper.Map<UsuarioRegistro, ApplicationUser>(usuarioRegistro);
+            ApplicationUser user = _mapper.Map<RegisterRequest, ApplicationUser>(usuarioRegistro);
 
             IdentityResult result = await _userManager.CreateAsync(user, usuarioRegistro.Senha);
 
             if (result.Succeeded)
-                return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative),
-                    await _jwtService.GerarJwt(usuarioRegistro.Email));
+            {
+                await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
+
+                return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative), await _jwtService.GerarJwt(usuarioRegistro.Email));
+            }
 
             foreach (IdentityError error in result.Errors)
                 AdicionarErroProcessamento(error.Description);

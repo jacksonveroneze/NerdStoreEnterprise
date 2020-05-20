@@ -10,7 +10,7 @@ namespace NSE.Identidade.API.Configuration
         {
             CreateMap<ApplicationUser, UserDataResponse>();
 
-            CreateMap<UsuarioRegistro, ApplicationUser>()
+            CreateMap<RegisterRequest, ApplicationUser>()
                 .ForMember(dest => dest.UserName, o => o.MapFrom(src => src.Email));
         }
     }
