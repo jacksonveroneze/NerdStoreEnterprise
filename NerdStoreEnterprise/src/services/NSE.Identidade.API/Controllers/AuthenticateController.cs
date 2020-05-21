@@ -14,9 +14,9 @@ namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Route("api/v1/authenticate")]
-    public class AuthController : BaseController
+    public class AuthenticateController : BaseController
     {
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<AuthenticateController> _logger;
         private readonly IMapper _mapper;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -42,7 +42,7 @@ namespace NSE.Identidade.API.Controllers
         //   jwtService:
         //     The jwtService param.
         //
-        public AuthController(ILogger<AuthController> logger, IMapper mapper, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IJWTService jwtService)
+        public AuthenticateController(ILogger<AuthenticateController> logger, IMapper mapper, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IJWTService jwtService)
         {
             _logger = logger;
             _mapper = mapper;
