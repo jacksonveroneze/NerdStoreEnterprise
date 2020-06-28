@@ -76,7 +76,7 @@ namespace NSE.Identidade.API.Controllers
 
             if (result.Succeeded)
             {
-                await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
+                //await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
 
                 return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative), await _jwtService.GerarJwt(registerRequest.Email));
             }

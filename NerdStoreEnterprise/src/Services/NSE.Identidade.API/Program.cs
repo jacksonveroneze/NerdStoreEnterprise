@@ -1,4 +1,6 @@
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -25,10 +27,21 @@ namespace NSE.Identidade.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
+
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.Listen(IPAddress.Any, 5001,
+                            listenOptions =>
+                            {
+                                // listenOptions.UseHttps("mycert.pfx", "123456");
+                                // listenOptions.Protocols = HttpProtocols.Http2;
+                            });
+                    });
                 });
     }
 }
