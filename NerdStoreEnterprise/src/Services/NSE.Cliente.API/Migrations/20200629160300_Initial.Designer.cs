@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NSE.Cliente.API.Migrations
 {
     [DbContext(typeof(ClientesContext))]
-    [Migration("20200629110521_Initial")]
+    [Migration("20200629160300_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace NSE.Cliente.API.Migrations
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("NSE.Clientes.API.Models.Cliente", b =>
+            modelBuilder.Entity("NSE.Clientes.API.Models.Client", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,7 +36,7 @@ namespace NSE.Cliente.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("cliente");
                 });
 
             modelBuilder.Entity("NSE.Clientes.API.Models.Endereco", b =>
@@ -80,14 +80,14 @@ namespace NSE.Cliente.API.Migrations
                     b.HasIndex("ClienteId")
                         .IsUnique();
 
-                    b.ToTable("Enderecos");
+                    b.ToTable("endereco");
                 });
 
-            modelBuilder.Entity("NSE.Clientes.API.Models.Cliente", b =>
+            modelBuilder.Entity("NSE.Clientes.API.Models.Client", b =>
                 {
                     b.OwnsOne("NSE.Core.DomainObjects.Cpf", "Cpf", b1 =>
                         {
-                            b1.Property<Guid>("ClienteId")
+                            b1.Property<Guid>("ClientId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Numero")
@@ -96,17 +96,17 @@ namespace NSE.Cliente.API.Migrations
                                 .HasColumnType("varchar(11)")
                                 .HasMaxLength(11);
 
-                            b1.HasKey("ClienteId");
+                            b1.HasKey("ClientId");
 
-                            b1.ToTable("Clientes");
+                            b1.ToTable("cliente");
 
                             b1.WithOwner()
-                                .HasForeignKey("ClienteId");
+                                .HasForeignKey("ClientId");
                         });
 
                     b.OwnsOne("NSE.Core.DomainObjects.Email", "Email", b1 =>
                         {
-                            b1.Property<Guid>("ClienteId")
+                            b1.Property<Guid>("ClientId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Endereco")
@@ -114,18 +114,18 @@ namespace NSE.Cliente.API.Migrations
                                 .HasColumnName("Email")
                                 .HasColumnType("varchar(254)");
 
-                            b1.HasKey("ClienteId");
+                            b1.HasKey("ClientId");
 
-                            b1.ToTable("Clientes");
+                            b1.ToTable("cliente");
 
                             b1.WithOwner()
-                                .HasForeignKey("ClienteId");
+                                .HasForeignKey("ClientId");
                         });
                 });
 
             modelBuilder.Entity("NSE.Clientes.API.Models.Endereco", b =>
                 {
-                    b.HasOne("NSE.Clientes.API.Models.Cliente", "Cliente")
+                    b.HasOne("NSE.Clientes.API.Models.Client", "Cliente")
                         .WithOne("Endereco")
                         .HasForeignKey("NSE.Clientes.API.Models.Endereco", "ClienteId")
                         .IsRequired();

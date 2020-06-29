@@ -17,17 +17,17 @@ namespace NSE.Clientes.API.Data.Repository
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<Cliente>> ObterTodos()
+        public async Task<IEnumerable<Client>> ObterTodos()
         {
             return await _context.Clientes.AsNoTracking().ToListAsync();
         }
 
-        public Task<Cliente> ObterPorCpf(string cpf)
+        public Task<Client> ObterPorCpf(string cpf)
         {
             return _context.Clientes.FirstOrDefaultAsync(c => c.Cpf.Numero == cpf);
         }
 
-        public void Adicionar(Cliente cliente)
+        public void Adicionar(Client cliente)
         {
             _context.Clientes.Add(cliente);
         }

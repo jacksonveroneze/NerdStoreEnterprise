@@ -4,12 +4,12 @@ using NSE.Core.Data;
 
 namespace NSE.Clientes.API.Models
 {
-    public interface IClienteRepository : IRepository<Cliente>
+    public interface IClienteRepository : IRepository<Client>
     {
-        void Adicionar(Cliente cliente);
+        void Adicionar(Client cliente);
 
-        Task<IEnumerable<Cliente>> ObterTodos();
+        Task<IEnumerable<Client>> ObterTodos();
 
-        Task<Cliente> ObterPorCpf(string cpf);
+        Task<Client> ObterPorCpf(string cpf);
     }
 }

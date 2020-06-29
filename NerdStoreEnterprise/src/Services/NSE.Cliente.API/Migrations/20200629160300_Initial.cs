@@ -8,7 +8,7 @@ namespace NSE.Cliente.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Clientes",
+                name: "cliente",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -19,11 +19,11 @@ namespace NSE.Cliente.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                    table.PrimaryKey("PK_cliente", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Enderecos",
+                name: "endereco",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -38,18 +38,18 @@ namespace NSE.Cliente.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enderecos", x => x.Id);
+                    table.PrimaryKey("PK_endereco", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Enderecos_Clientes_ClienteId",
+                        name: "FK_endereco_cliente_ClienteId",
                         column: x => x.ClienteId,
-                        principalTable: "Clientes",
+                        principalTable: "cliente",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enderecos_ClienteId",
-                table: "Enderecos",
+                name: "IX_endereco_ClienteId",
+                table: "endereco",
                 column: "ClienteId",
                 unique: true);
         }
@@ -57,10 +57,10 @@ namespace NSE.Cliente.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Enderecos");
+                name: "endereco");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "cliente");
         }
     }
 }

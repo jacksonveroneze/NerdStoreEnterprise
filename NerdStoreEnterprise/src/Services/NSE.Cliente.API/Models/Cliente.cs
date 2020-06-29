@@ -3,7 +3,7 @@ using NSE.Core.DomainObjects;
 
 namespace NSE.Clientes.API.Models
 {
-    public class Cliente : Entity, IAggregateRoot
+    public class Client : Entity, IAggregateRoot
     {
         public string Nome { get; private set; }
 
@@ -15,9 +15,9 @@ namespace NSE.Clientes.API.Models
 
         public Endereco Endereco { get; private set; }
 
-        protected Cliente() { }
+        protected Client() { }
 
-        public Cliente(Guid id, string nome, string email, string cpf)
+        public Client(Guid id, string nome, string email, string cpf)
         {
             Id = id;
             Nome = nome;

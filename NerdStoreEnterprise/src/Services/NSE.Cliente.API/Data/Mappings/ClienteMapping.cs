@@ -5,10 +5,12 @@ using NSE.Core.DomainObjects;
 
 namespace NSE.Clientes.API.Data.Mappings
 {
-    public class ClienteMapping : IEntityTypeConfiguration<Cliente>
+    public class ClienteMapping : IEntityTypeConfiguration<Client>
     {
-        public void Configure(EntityTypeBuilder<Cliente> builder)
+        public void Configure(EntityTypeBuilder<Client> builder)
         {
+            builder.ToTable("cliente");
+
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Nome)
@@ -34,8 +36,6 @@ namespace NSE.Clientes.API.Data.Mappings
 
             builder.HasOne(c => c.Endereco)
                 .WithOne(c => c.Cliente);
-
-            builder.ToTable("Clientes");
         }
     }
 }

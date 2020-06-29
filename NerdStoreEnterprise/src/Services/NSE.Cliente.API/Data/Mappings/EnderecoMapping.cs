@@ -8,6 +8,8 @@ namespace NSE.Clientes.API.Data.Mappings
     {
         public void Configure(EntityTypeBuilder<Endereco> builder)
         {
+            builder.ToTable("endereco");
+
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Logradouro)
@@ -36,8 +38,6 @@ namespace NSE.Clientes.API.Data.Mappings
             builder.Property(c => c.Estado)
                 .IsRequired()
                 .HasColumnType("varchar(50)");
-
-            builder.ToTable("Enderecos");
         }
     }
 }
