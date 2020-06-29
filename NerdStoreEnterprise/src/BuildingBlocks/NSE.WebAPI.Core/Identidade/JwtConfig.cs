@@ -9,10 +9,10 @@ namespace NSE.WebAPI.Core.Identidade
 {
     public static class JwtConfig
     {
-        public static void AddJwtConfiguration(this IServiceCollection services,
-            IConfiguration configuration)
+        public static void AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             var appSettingsSection = configuration.GetSection("AppSettings");
+
             services.Configure<AppSettings>(appSettingsSection);
 
             var appSettings = appSettingsSection.Get<AppSettings>();

@@ -9,6 +9,7 @@ namespace NSE.Clientes.API.Models
         void Adicionar(Cliente cliente);
 
         Task<IEnumerable<Cliente>> ObterTodos();
+
         Task<Cliente> ObterPorCpf(string cpf);
     }
 }

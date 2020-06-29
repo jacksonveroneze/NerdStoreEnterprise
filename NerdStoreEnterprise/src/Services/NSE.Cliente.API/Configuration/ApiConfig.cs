@@ -14,13 +14,13 @@ namespace NSE.Clientes.API.Configuration
         public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ClientesContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
 
             services.AddCors(options =>
             {
-                options.AddPolicy("Total",
+                options.AddPolicy("All",
                     builder =>
                         builder
                             .AllowAnyOrigin()
@@ -32,22 +32,17 @@ namespace NSE.Clientes.API.Configuration
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors("Total");
+            app.UseCors("All");
 
             app.UseAuthConfiguration();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

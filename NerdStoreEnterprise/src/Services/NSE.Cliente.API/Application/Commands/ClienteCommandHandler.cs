@@ -8,15 +8,12 @@ using NSE.Core.Messages;
 
 namespace NSE.Clientes.API.Application.Commands
 {
-    public class ClienteCommandHandler : CommandHandler,
-        IRequestHandler<RegistrarClienteCommand, ValidationResult>
+    public class ClienteCommandHandler : CommandHandler, IRequestHandler<RegistrarClienteCommand, ValidationResult>
     {
         private readonly IClienteRepository _clienteRepository;
 
         public ClienteCommandHandler(IClienteRepository clienteRepository)
-        {
-            _clienteRepository = clienteRepository;
-        }
+            => _clienteRepository = clienteRepository;
 
         public async Task<ValidationResult> Handle(RegistrarClienteCommand message, CancellationToken cancellationToken)
         {
@@ -29,6 +26,7 @@ namespace NSE.Clientes.API.Application.Commands
             if (clienteExistente != null)
             {
                 AdicionarErro("Este CPF já está em uso.");
+
                 return ValidationResult;
             }
 

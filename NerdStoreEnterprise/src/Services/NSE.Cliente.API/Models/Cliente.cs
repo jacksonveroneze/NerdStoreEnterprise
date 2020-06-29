@@ -27,13 +27,9 @@ namespace NSE.Clientes.API.Models
         }
 
         public void TrocarEmail(string email)
-        {
-            Email = new Email(email);
-        }
+            => Email = new Email(email);
 
         public void AtribuirEndereco(Endereco endereco)
-        {
-            Endereco = endereco;
-        }
+            => Endereco = endereco;
     }
 }
