@@ -5,7 +5,7 @@ namespace NSE.Identidade.API.Models.Responses
         public string AccessToken { get; set; }
 
         public double ExpiresIn { get; set; }
-        
+
         public UserTokenResponse UsuarioToken { get; set; }
     }
 }

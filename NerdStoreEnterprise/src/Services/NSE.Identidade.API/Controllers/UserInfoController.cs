@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NSE.Identidade.API.Models.Requests;
+using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Models.Responses;
 
 namespace NSE.Identidade.API.Controllers

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Models.Requests;
 using NSE.Identidade.API.Models.Responses;
 

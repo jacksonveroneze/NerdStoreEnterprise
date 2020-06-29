@@ -1,7 +1,7 @@
 using System;
 using AspNetCore.Identity.Mongo.Model;
 
-namespace NSE.Identidade.API.Models.Requests
+namespace NSE.Identidade.API.Models
 {
     public class ApplicationUser : MongoUser
     {

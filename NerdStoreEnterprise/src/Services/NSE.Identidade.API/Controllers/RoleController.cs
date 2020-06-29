@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSE.Identidade.API.Models.Requests;
-using NSE.Identidade.API.Models.Responses;
-using NSE.Identidade.API.Services;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace NSE.Identidade.API.Controllers
 {

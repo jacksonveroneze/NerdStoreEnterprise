@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using AspNetCore.Identity.Mongo;
+using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -6,10 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NSE.Identidade.API.Extensions;
-using AspNetCore.Identity.Mongo;
-using AspNetCore.Identity.Mongo.Model;
-using System;
-using NSE.Identidade.API.Models.Requests;
+using NSE.Identidade.API.Models;
 
 namespace NSE.Identidade.API.Configuration
 {
