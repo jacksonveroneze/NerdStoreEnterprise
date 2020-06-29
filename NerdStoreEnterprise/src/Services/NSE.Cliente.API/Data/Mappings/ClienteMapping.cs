@@ -32,7 +32,6 @@ namespace NSE.Clientes.API.Data.Mappings
                     .HasColumnType($"varchar({Email.EnderecoMaxLength})");
             });
 
-            // 1 : 1 => Aluno : Endereco
             builder.HasOne(c => c.Endereco)
                 .WithOne(c => c.Cliente);
 

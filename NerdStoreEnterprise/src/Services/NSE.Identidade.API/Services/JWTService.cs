@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NSE.Identidade.API.Extensions;
-using NSE.Identidade.API.Models.Requests;
+using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Models.Responses;
 
 namespace NSE.Identidade.API.Services
