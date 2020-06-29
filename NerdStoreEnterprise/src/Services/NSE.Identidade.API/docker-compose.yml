@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    ports:
+      - 8000:80
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - mongodb:/data/db
+    ports:
+      - 27018:27017
+
+volumes:
+  mongodb:
+
+networks:
+  default:
+    external:
+      name: docker-network
