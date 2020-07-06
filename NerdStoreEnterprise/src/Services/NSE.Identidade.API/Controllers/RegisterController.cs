@@ -26,7 +26,6 @@ namespace NSE.Identidade.API.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJWTService _jwtService;
-        private readonly IEmailSender _emailSender;
         private readonly IMessageBus _bus;
 
         //
@@ -46,19 +45,16 @@ namespace NSE.Identidade.API.Controllers
         //   jwtService:
         //     The jwtService param.
         //
-        //   emailSender:
-        //     The emailSender param.
-        //
         //   bus:
         //     The bus param.
         //
-        public RegisterController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IJWTService jwtService, IEmailSender emailSender, IMessageBus bus)
+        public RegisterController(ILogger<RegisterController> logger, IMapper mapper,
+            UserManager<ApplicationUser> userManager, IJWTService jwtService, IMessageBus bus)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _jwtService = jwtService;
-            _emailSender = emailSender;
             _bus = bus;
         }
 
@@ -96,9 +92,8 @@ namespace NSE.Identidade.API.Controllers
                     return CustomResponse(clienteResult.ValidationResult);
                 }
 
-                await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
-
-                return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative), await _jwtService.GerarJwt(registerRequest.Email));
+                return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative),
+                    await _jwtService.GerarJwt(registerRequest.Email));
             }
 
             foreach (IdentityError error in result.Errors)
@@ -111,20 +106,31 @@ namespace NSE.Identidade.API.Controllers
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(registerRequest.Email);
 
-            UsuarioRegistradoIntegrationEvent registeredUser = new UsuarioRegistradoIntegrationEvent(Guid.NewGuid(), registerRequest.Name, registerRequest.Email, registerRequest.Cpf);
+            UsuarioRegistradoIntegrationEvent registeredUser = new UsuarioRegistradoIntegrationEvent(Guid.NewGuid(),
+                registerRequest.Name, registerRequest.Email, registerRequest.Cpf);
+
+            UsuarioRegistradoSendMailIntegrationEvent registeredUserSendMail =
+                new UsuarioRegistradoSendMailIntegrationEvent(Guid.NewGuid(), registerRequest.Name,
+                    registerRequest.Email, registerRequest.Cpf);
 
             try
             {
                 RetryPolicy policy = Policy.Handle<Exception>()
                     .WaitAndRetry(15, retryAttempt =>
-                         TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                            TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                         (outcome, timespan, retryCount, context) =>
                         {
                             Console.WriteLine($"Tentando pela {retryCount} vez!");
                         });
 
-                return await policy.Execute(async () =>
+                var result = await policy.Execute(async () =>
                     await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(registeredUser));
+
+                if (result.ValidationResult.IsValid)
+                    await policy.Execute(async () =>
+                        await _bus.PublishAsync(registeredUserSendMail));
+
+                return result;
             }
             catch (Exception e)
             {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using NSE.WebAPI.Core.Log;
+using NSE.Core.Log;
 using Serilog;
 
 namespace NSE.WebApp.MVC

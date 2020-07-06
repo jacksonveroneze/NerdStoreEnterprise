@@ -1,22 +1,20 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSE.Identidade.API.Extensions;
-using NSE.Identidade.API.Services;
+using NSE.Mail.API.Extensions;
+using NSE.Mail.API.Services;
 using NSE.WebAPI.Core.Middlewares;
 
-namespace NSE.Identidade.API.Configuration
+namespace NSE.Mail.API.Configuration
 {
     public static class ApiConfig
     {
-        public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddApiConfiguration(this IServiceCollection services,
+            IConfiguration configuration)
         {
-            services.AddAutoMapper(typeof(MappingProfile));
-
-            services.AddTransient<IJWTService, JWTService>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
@@ -36,12 +34,7 @@ namespace NSE.Identidade.API.Configuration
 
             app.UseRouting();
 
-            app.UseIdentityConfiguration();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             return app;
         }

@@ -2,9 +2,9 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using NSE.Identidade.API.Extensions;
+using NSE.Mail.API.Extensions;
 
-namespace NSE.Identidade.API.Services
+namespace NSE.Mail.API.Services
 {
     public class EmailSender : IEmailSender
     {
@@ -22,7 +22,7 @@ namespace NSE.Identidade.API.Services
             };
 
             return client.SendMailAsync(
-                new MailMessage("jackson@jacksonveroneze.com", email, subject, htmlMessage) { IsBodyHtml = true }
+                new MailMessage("jackson@jacksonveroneze.com", email, subject, htmlMessage) {IsBodyHtml = true}
             );
         }
     }

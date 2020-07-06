@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace NSE.Identidade.API.Services
+namespace NSE.Mail.API.Services
 {
     public interface IEmailSender
     {

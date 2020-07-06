@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using NSE.Core.Log;
 using Serilog;
 
-namespace NSE.Clientes.API
+namespace NSE.Mail.API
 {
     public class Program
     {
