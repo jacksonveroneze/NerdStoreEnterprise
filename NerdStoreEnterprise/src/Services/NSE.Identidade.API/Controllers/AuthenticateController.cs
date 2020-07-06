@@ -9,13 +9,14 @@ using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Models.Requests;
 using NSE.Identidade.API.Models.Responses;
 using NSE.Identidade.API.Services;
+using NSE.WebAPI.Core.Controllers;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Route("api/v1/authenticate")]
-    public class AuthenticateController : BaseController
+    public class AuthenticateController : MainController
     {
         private readonly ILogger<AuthenticateController> _logger;
         private readonly IMapper _mapper;

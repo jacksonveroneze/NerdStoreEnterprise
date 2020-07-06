@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSE.Identidade.API.Configuration;
 using NSE.Identidade.API.Middlewares;
 
@@ -21,6 +22,8 @@ namespace NSE.Identidade.API
             services.AddIdentityConfiguration(Configuration);
 
             services.AddSwaggerConfiguration();
+
+            services.AddMessageBusConfiguration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

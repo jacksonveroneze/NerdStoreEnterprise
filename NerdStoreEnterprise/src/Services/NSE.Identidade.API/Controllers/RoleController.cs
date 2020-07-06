@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSE.Identidade.API.Models.Requests;
+using NSE.WebAPI.Core.Controllers;
 
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Route("api/v1/role")]
-    public class RoleController : BaseController
+    public class RoleController : MainController
     {
         private readonly ILogger<AuthenticateController> _logger;
         private readonly IMapper _mapper;

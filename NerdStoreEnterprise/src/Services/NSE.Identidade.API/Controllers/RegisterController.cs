@@ -6,22 +6,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NSE.Core.Integration;
 using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Models.Requests;
 using NSE.Identidade.API.Models.Responses;
 using NSE.Identidade.API.Services;
+using NSE.MessageBus;
+using NSE.WebAPI.Core.Controllers;
+using Polly;
+using Polly.Retry;
 
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Route("api/v1/register")]
-    public class RegisterController : BaseController
+    public class RegisterController : MainController
     {
         private readonly ILogger<RegisterController> _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJWTService _jwtService;
         private readonly IEmailSender _emailSender;
+        private readonly IMessageBus _bus;
 
         //
         // Summary:
@@ -43,13 +49,17 @@ namespace NSE.Identidade.API.Controllers
         //   emailSender:
         //     The emailSender param.
         //
-        public RegisterController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IJWTService jwtService, IEmailSender emailSender)
+        //   bus:
+        //     The bus param.
+        //
+        public RegisterController(ILogger<RegisterController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IJWTService jwtService, IEmailSender emailSender, IMessageBus bus)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _jwtService = jwtService;
             _emailSender = emailSender;
+            _bus = bus;
         }
 
         //
@@ -77,7 +87,16 @@ namespace NSE.Identidade.API.Controllers
 
             if (result.Succeeded)
             {
-                //await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
+                ResponseMessage clienteResult = await RegisterClient(registerRequest);
+
+                if (clienteResult.ValidationResult.IsValid is false)
+                {
+                    await _userManager.DeleteAsync(user);
+
+                    return CustomResponse(clienteResult.ValidationResult);
+                }
+
+                await _emailSender.SendEmailAsync("jackson@jacksonveroneze.com", "Register confirmation", "Register confirmation");
 
                 return Created(new Uri($"{Request.Path}/{user.Id}", UriKind.Relative), await _jwtService.GerarJwt(registerRequest.Email));
             }
@@ -86,6 +105,33 @@ namespace NSE.Identidade.API.Controllers
                 AdicionarErroProcessamento(error.Description);
 
             return CustomResponse();
+        }
+
+        private async Task<ResponseMessage> RegisterClient(RegisterRequest registerRequest)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(registerRequest.Email);
+
+            UsuarioRegistradoIntegrationEvent registeredUser = new UsuarioRegistradoIntegrationEvent(Guid.NewGuid(), registerRequest.Name, registerRequest.Email, registerRequest.Cpf);
+
+            try
+            {
+                RetryPolicy policy = Policy.Handle<Exception>()
+                    .WaitAndRetry(15, retryAttempt =>
+                         TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                        (outcome, timespan, retryCount, context) =>
+                        {
+                            Console.WriteLine($"Tentando pela {retryCount} vez!");
+                        });
+
+                return await policy.Execute(async () =>
+                    await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(registeredUser));
+            }
+            catch (Exception e)
+            {
+                await _userManager.DeleteAsync(user);
+
+                throw;
+            }
         }
     }
 }

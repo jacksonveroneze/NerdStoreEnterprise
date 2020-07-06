@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NSE.Clientes.API.Configuration;
 using NSE.WebAPI.Core.Identidade;
+using Serilog;
 
 namespace NSE.Clientes.API
 {
@@ -13,16 +14,8 @@ namespace NSE.Clientes.API
     {
         public IConfiguration Configuration { get; }
 
-        public Startup(IHostEnvironment hostEnvironment)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(hostEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-        }
+        public Startup(IConfiguration configuration)
+            => Configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -35,6 +28,8 @@ namespace NSE.Clientes.API
             services.AddMediatR(typeof(Startup));
 
             services.RegisterServices();
+
+            services.AddMessageBusConfiguration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

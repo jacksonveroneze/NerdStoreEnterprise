@@ -8,13 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Models.Responses;
+using NSE.WebAPI.Core.Controllers;
 
 namespace NSE.Identidade.API.Controllers
 {
     [ApiController]
     [Authorize]
     [Route("api/v1/userinfo")]
-    public class UserInfoController : BaseController
+    public class UserInfoController : MainController
     {
         private readonly ILogger<UserInfoController> _logger;
         private readonly IMapper _mapper;

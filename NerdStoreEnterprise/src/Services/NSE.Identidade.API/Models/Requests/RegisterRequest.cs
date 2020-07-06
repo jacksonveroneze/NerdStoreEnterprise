@@ -23,6 +23,9 @@ namespace NSE.Identidade.API.Models.Requests
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        public string Cpf { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public DateTime? Birthdate { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]

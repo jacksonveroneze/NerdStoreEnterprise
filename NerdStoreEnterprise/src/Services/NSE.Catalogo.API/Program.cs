@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using NSE.WebAPI.Core.Log;
+using Serilog;
 
 namespace NSE.Catalogo.API
 {
@@ -13,6 +9,8 @@ namespace NSE.Catalogo.API
     {
         public static void Main(string[] args)
         {
+            Log.Logger = LoggerFactory.Factory();
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -21,6 +19,7 @@ namespace NSE.Catalogo.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
                 });
     }
 }

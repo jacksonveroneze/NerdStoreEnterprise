@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.Mongo" Version="6.7.1" />
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -18,12 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\NSE.MessageBus\NSE.MessageBus.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\NSE.Core\NSE.Core.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\NSE.WebAPI.Core\NSE.WebAPI.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configuration\" />
   </ItemGroup>
 
 </Project>
