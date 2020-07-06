@@ -23,7 +23,7 @@ namespace NSE.WebApp.MVC.Services
         {
             var loginContent = ObterConteudo(usuarioLogin);
 
-            var response = await _httpClient.PostAsync("/api/identidade/autenticar", loginContent);
+            var response = await _httpClient.PostAsync("/api/v1/authenticate", loginContent);
 
             if (!TratarErrosResponse(response))
             {
@@ -40,7 +40,7 @@ namespace NSE.WebApp.MVC.Services
         {
             var registroContent = ObterConteudo(usuarioRegistro);
 
-            var response = await _httpClient.PostAsync("/api/identidade/nova-conta", registroContent);
+            var response = await _httpClient.PostAsync("/api/v1/register", registroContent);
 
             if (!TratarErrosResponse(response))
             {

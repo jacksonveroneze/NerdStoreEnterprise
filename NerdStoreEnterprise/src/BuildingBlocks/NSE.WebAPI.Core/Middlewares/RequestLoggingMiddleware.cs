@@ -1,13 +1,10 @@
 using System;
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using MongoDB.Bson;
 
-namespace NSE.Identidade.API.Middlewares
+namespace NSE.WebAPI.Core.Middlewares
 {
     public class RequestLoggingMiddleware
     {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.Identidade.API.Extensions;
 using NSE.Identidade.API.Services;
+using NSE.WebAPI.Core.Middlewares;
 
 namespace NSE.Identidade.API.Configuration
 {
@@ -28,6 +29,8 @@ namespace NSE.Identidade.API.Configuration
 
         public static IApplicationBuilder UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
